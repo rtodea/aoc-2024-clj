@@ -1,79 +1,32 @@
-# [Choice] Java version (use -bullseye variants on local arm64/Apple Silicon): 11, 17, 11-bullseye, 17-bullseye, 11-buster, 17-buster
-ARG JAVA_VERSION
-FROM mcr.microsoft.com/devcontainers/java:${JAVA_VERSION}
+ARG BASE_IMAGE=temurin-21-tools-deps-jammy
+FROM clojure:${BASE_IMAGE}
 
-# [Optional] Clojure version
-ARG CLOJURE_VERSION
-
-# [Optional] Clojure tools version
-ARG CLOJURE_CLI_VERSION
-
-# [Optional] Leiningen version
-ARG LEININGEN_VERSION="stable"
-
-# [Optional] POLYLITH version
-ARG POLYLITH_VERSION="0.2.13-alpha"
-
-# [Optional] Boot version
-ENV BOOT_VERSION=2.8.3
-
-# [Optional] Clojure version used by Boot
-ENV BOOT_CLOJURE_VERSION=${CLOJURE_VERSION}
-
-# [Option] Install Clojure CLI tool
-ARG INSTALL_CLOJURE_CLI
-
-# [Option] Install Boot
-ARG INSTALL_BOOT
-
-# [Option] Install Leiningen
-ARG INSTALL_LEININGEN
-
-# [Option] Install Polylith
-ARG INSTALL_POLYLITH
-
-RUN if [ "${INSTALL_CLOJURE_CLI}" = "true" ]; then \
-    apt-get update \
-    && apt-get -y install rlwrap \
-    && curl -OL "https://download.clojure.org/install/linux-install-${CLOJURE_CLI_VERSION}.sh" \
-    && chmod +x linux-install-${CLOJURE_CLI_VERSION}.sh \
-    && /linux-install-${CLOJURE_CLI_VERSION}.sh \
-    && rm /linux-install-${CLOJURE_CLI_VERSION}.sh \
-    && su vscode -c "clj --version"; fi
-
-RUN if [ "${INSTALL_BOOT}" = "true" ]; then \
-    curl -OL "https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh" \
-    && chmod +x boot.sh \
-    && mv boot.sh /usr/local/sbin/boot \
-    && su vscode -c "boot -u"; fi
-
-RUN if [ "${INSTALL_LEININGEN}" = "true" ]; then \
-    curl -OL "https://raw.githubusercontent.com/technomancy/leiningen/${LEININGEN_VERSION}/bin/lein" \
-    && chmod +x lein \
-    && mv lein /usr/local/sbin; fi
-
-# Cache Clojure and dependencies
-RUN if [ "${INSTALL_LEININGEN}" = "true" ]; then \
-    su vscode -c " cd ~ \
-    && echo '(defproject dummy \"\" :dependencies [[org.clojure/clojure \"'${CLOJURE_VERSION}'\"]])' > project.clj \
-    && lein deps \
-    && rm project.clj"; fi
-
-RUN if [ "${INSTALL_POLYLITH}" = "true" ]; then \
-    curl -OL "https://github.com/polyfy/polylith/releases/download/v${POLYLITH_VERSION}/poly-${POLYLITH_VERSION}.jar" \
-    && mkdir -p /usr/local/polylith \
-    && mv poly-$POLYLITH_VERSION.jar /usr/local/polylith \
-    && echo '#!/bin/sh\nARGS=""\nwhile [ "$1" != "" ] ; do\n  ARGS="$ARGS $1"\n  shift\ndone\nexec "java" $JVM_OPTS "-jar" "/usr/local/polylith/poly-'$POLYLITH_VERSION'.jar" $ARGS\n' > /usr/local/sbin/poly \
-    && chmod +x /usr/local/sbin/poly \
-    && /usr/local/sbin/poly version; fi
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+    
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    #
+    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+    && apt-get update \
+    && apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+    
+    
+# [Optional] Set the default user. Omit if you want to keep the default as root.
+USER $USERNAME
+SHELL ["/bin/bash", "-ec"]
+ENTRYPOINT ["bash"]
 
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+# Prepare clojure tools
+RUN clojure -Ttools list && \
+clojure -Ttools install io.github.seancorfield/clj-new '{:git/tag "v1.2.404" :git/sha "d4a6508"}' :as clj-new && \
+clojure -Ttools install-latest :lib io.github.seancorfield/deps-new :as new && \
+clojure -Ttools list
 
-# [Optional] Uncomment this line to install global node packages.
-# RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
-
-# Clean up package lists
-RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+RUN sudo apt-get update && \
+    sudo apt-get install -y lsb-release

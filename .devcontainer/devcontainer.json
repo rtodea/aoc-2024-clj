@@ -1,42 +1,24 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/scicloj/devcontainer-templates/tree/main/src/basecloj
 {
-	"name": "Clojure (Community)",
+	"name": "Base clojure dev env",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			// Options
-			"CLOJURE_VERSION": "1.12.0",
-            "CLOJURE_CLI_VERSION": "1.12.0",
-            "JAVA_VERSION": "21",
-			"INSTALL_POLYLITH": "${templateOptions.installPolylith}",
-			"INSTALL_LEININGEN": "${templateOptions.installLeiningen}",
-			"INSTALL_BOOT": "${templateOptions.installBoot}",
-			"INSTALL_CLOJURE_CLI": "${templateOptions.installClojureCli}"
+			"BASE_IMAGE": "temurin-21-tools-deps-jammy",
+			"USERNAME": "${localEnv:USER:vscode}"
 		}
 	},
-
-	// Configure tool-specific properties.
+	"remoteUser": "${localEnv:USER}",
+	"containerUser": "${localEnv:USER}",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
 	"customizations": {
-		// Configure properties specific to VS Code.
 		"vscode": {
-			// Set *default* container specific settings.json values on container create.
-			"settings": { 
-			},
-			
-			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"vscjava.vscode-java-pack",
-				"borkdude.clj-kondo",
 				"betterthantomorrow.calva"
 			]
 		}
-	},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "java -version",
-
-	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode"
+	}
 }
