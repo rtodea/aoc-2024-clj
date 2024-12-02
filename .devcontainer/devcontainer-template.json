@@ -12,7 +12,7 @@
                     "description": "Do not install the Clojure CLI"
                 }
             ],
-            "default": false
+            "default": true 
         },
         "installBoot": {
             "type": "boolean",
@@ -40,7 +40,7 @@
                     "description": "Do not install Leiningen"
                 }
             ],
-            "default": false
+            "default": true 
         }
     }       
 }

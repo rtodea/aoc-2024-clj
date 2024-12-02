@@ -1,6 +1,6 @@
 # [Choice] Java version (use -bullseye variants on local arm64/Apple Silicon): 11, 17, 11-bullseye, 17-bullseye, 11-buster, 17-buster
-ARG VARIANT
-FROM mcr.microsoft.com/devcontainers/java:${VARIANT}
+ARG JAVA_VERSION
+FROM mcr.microsoft.com/devcontainers/java:${JAVA_VERSION}
 
 # [Optional] Clojure version
 ARG CLOJURE_VERSION
