@@ -44,7 +44,7 @@
         },
         "nodeVersion": {
             "type": "string",
-            "default": "lts/*",
+            "default": "20",
             "description": "The version of Node.js to install"
         }
     }       
