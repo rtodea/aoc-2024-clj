@@ -6,7 +6,12 @@
 			// Options
 			"CLOJURE_VERSION": "1.12.0",
             "CLOJURE_CLI_VERSION": "1.12.0",
-            "VARIANT": "21"
+            "VARIANT": "21",
+			"NODE_VERSION": "${templateOptions.nodeVersion}",
+			"INSTALL_POLYLITH": "${templateOptions.installPolylith}",
+			"INSTALL_LEININGEN": "${templateOptions.installLeiningen}",
+			"INSTALL_BOOT": "${templateOptions.installBoot}",
+			"INSTALL_CLOJURE_CLI": "${templateOptions.installClojureCli}"
 		}
 	},
 
