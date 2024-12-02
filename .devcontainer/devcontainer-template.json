@@ -1,0 +1,51 @@
+{
+    "options": {
+        "installClojureCli": {
+            "type": "boolean",
+            "proposals": [
+                {
+                    "value": true,
+                    "description": "Install the Clojure CLI"
+                },
+                {
+                    "value": false,
+                    "description": "Do not install the Clojure CLI"
+                }
+            ],
+            "default": false
+        },
+        "installBoot": {
+            "type": "boolean",
+            "proposals": [
+                {
+                    "value": true,
+                    "description": "Install Boot",
+                },
+                {
+                    "value": false,
+                    "description": "Do not install Boot"
+                }
+            ],
+            "default": false
+        },
+        "installLeiningen": {
+            "type": "boolean",
+            "proposals": [
+                {
+                    "value": true,
+                    "description": "Install Leiningen"
+                },
+                {
+                    "value": false,
+                    "description": "Do not install Leiningen"
+                }
+            ],
+            "default": false
+        },
+        "nodeVersion": {
+            "type": "string",
+            "default": "lts/*",
+            "description": "The version of Node.js to install"
+        }
+    }       
+}
