@@ -46,10 +46,17 @@ Alternatively, you can use the provided Dockerfile to run the solutions in a con
    docker build -t aoc-2024-clj .
    ```
 
-2. Run the container with the command:
+2. Run the container for **Day 01**:
 
     ```bash
     docker run -v $(pwd)/clj/day-01/input.txt:/app/input.txt aoc-2024-clj clj -M -e "(load-file \"src/solution.clj\") (solution/solve \"input.txt\")"
+    ```
+
+3. Run the container for **Day 01 Part 2**:
+
+    ```bash
+    # Note: We mount the Part 2 source code into the container
+    docker run -v $(pwd)/clj/day-01-part-2/src:/app/src -v $(pwd)/clj/day-01/input.txt:/app/input.txt aoc-2024-clj clj -M -e "(load-file \"src/solution.clj\") (solution/solve \"input.txt\")"
     ```
 
 ## Running Tests
