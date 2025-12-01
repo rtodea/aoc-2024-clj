@@ -15,7 +15,7 @@
    "L82"])
 
 (deftest test-count-dial-zero-is-hit
-  (is (= 0 (count-dial-zero-is-hit input-data))))
+  (is (= 3 (count-dial-zero-is-hit input-data))))
 
 (comment 
   (count-dial-zero-is-hit input-data)

@@ -25,17 +25,18 @@
   (parse-instruction "L68")  ; Should return {:direction \L, :steps 68}
   (parse-instruction "R48")  ; Should return {:direction \R, :steps 48}
   
-  ;; Test dial movement
-  (move-dial 0 \L 5 100)     ; Move left 5 steps from 0: should go to 95, hit 0 once
-  (move-dial 95 \R 10 100)   ; Move right 10 steps from 95: should go to 5, hit 0 once
+  ;; Test dial movement - FIXED VERSION
+  (move-dial 0 \L 5 100)     ; From 0, move left 5: 99,98,97,96,95 - no zeros hit
+  (move-dial 5 \L 10 100)    ; From 5, move left 10: 4,3,2,1,0,99,98,97,96,95 - hit 0 once
+  (move-dial 95 \R 10 100)   ; From 95, move right 10: 96,97,98,99,0,1,2,3,4,5 - hit 0 once
+  
+  ;; Test edge cases
+  (move-dial 0 \L 1 100)     ; From 0, left 1 step: should go to 99, no zeros hit
+  (move-dial 1 \L 1 100)     ; From 1, left 1 step: should go to 0, hit 0 once
+  (move-dial 99 \R 1 100)    ; From 99, right 1 step: should go to 0, hit 0 once
   
   ;; Test with sample instructions
   (count-dial-zero-is-hit test-instructions)
-  
-  ;; Test with file input (once we get it working)
-  (def input-data (parse-instructions-from-file "./input.txt"))
-  input-data
-  (count-dial-zero-is-hit input-data)
   )
 
 (defn parse-instruction
@@ -49,12 +50,17 @@
   "Moves the dial position by the given steps in the given direction.
    Returns [new-position zero-hits] where zero-hits is how many times we passed 0."
   [current-pos direction steps dial-size]
-  (let [step-fn (if (= direction \R) inc dec)
-        positions (take (inc steps) 
-                       (iterate #(mod (step-fn %) dial-size) current-pos))
-        final-pos (last positions)
-        zero-hits (count (filter zero? (rest positions)))]
-    [final-pos zero-hits]))
+  (let [step-fn (if (= direction \R) inc dec)]
+    (loop [pos current-pos
+           remaining-steps steps
+           zero-hits 0]
+      (if (zero? remaining-steps)
+        [pos zero-hits]
+        (let [new-pos (mod (step-fn pos) dial-size)
+              new-zero-hits (if (zero? new-pos) (inc zero-hits) zero-hits)]
+          (recur new-pos
+                 (dec remaining-steps)
+                 new-zero-hits))))))
 
 (defn count-dial-zero-is-hit
     "Counts how many times the dial hits zero."
