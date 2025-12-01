@@ -32,3 +32,17 @@ Alternatively, you can use the provided Dockerfile to run the solutions in a con
     ```bash
     docker run -v $(pwd)/clj/day-01/input.txt:/app/input.txt aoc-2024-clj clj -M -e "(load-file \"src/solution.clj\") (solution/solve \"input.txt\")"
     ```
+
+## Running Tests
+
+To run the tests locally:
+
+```bash
+clj -M -e "(require 'test) (clojure.test/run-tests 'test)"
+```
+
+To run the tests using Docker:
+
+```bash
+docker run aoc-2024-clj clj -M -e "(load-file \"src/test.clj\") (clojure.test/run-tests 'test)"
+```
