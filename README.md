@@ -17,6 +17,25 @@ Advent of Code solutions in Clojure and notes about them.
     (day-01/solve "clj/day-01/input.txt")
     ```
 
+## Day 01 Part 2
+
+To run the solution for Day 01 Part 2:
+
+1. Navigate to the directory:
+   ```bash
+   cd clj/day-01-part-2
+   ```
+
+2. Run the tests:
+   ```bash
+   clj -M -e "(require 'test) (clojure.test/run-tests 'test)"
+   ```
+
+3. Run the solution (assuming input.txt is present):
+   ```bash
+   clj -M -e "(load-file \"src/solution.clj\") (solution/solve \"input.txt\")"
+   ```
+
 ## Dockerfile approach
 
 Alternatively, you can use the provided Dockerfile to run the solutions in a containerized environment.
@@ -51,6 +70,8 @@ docker run aoc-2024-clj clj -M -e "(load-file \"src/test.clj\") (clojure.test/ru
 
 You can explore the solution and visualization in a Clerk notebook.
 
+### Day 01
+
 1. Navigate to the day's directory:
    ```bash
    cd clj/day-01
@@ -67,3 +88,22 @@ You can explore the solution and visualization in a Clerk notebook.
    ```
 
 4. Open your browser at http://localhost:7777 and select `day01.clj` to see the notebook.
+
+### Day 01 Part 2
+
+1. Navigate to the directory:
+   ```bash
+   cd clj/day-01-part-2
+   ```
+
+2. Build the Clerk Docker image:
+   ```bash
+   docker build -f Dockerfile.clerk -t aoc-2024-clj-day01-part2-clerk .
+   ```
+
+3. Run the container:
+   ```bash
+   docker run -p 7777:7777 aoc-2024-clj-day01-part2-clerk
+   ```
+
+4. Open your browser at http://localhost:7777 and select `day01-part2.clj`.

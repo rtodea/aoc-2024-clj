@@ -1,0 +1,19 @@
+FROM clojure:temurin-21-tools-deps
+
+WORKDIR /app/notebook
+
+# Copy the notebook configuration
+COPY notebook/deps.edn .
+
+# Download dependencies
+RUN clojure -P
+
+# Copy the source code
+COPY src ../src
+COPY notebook .
+
+# Expose Clerk port
+EXPOSE 7777
+
+# Run Clerk using the runner script
+CMD ["clojure", "-M", "run.clj"]
