@@ -46,3 +46,24 @@ To run the tests using Docker:
 ```bash
 docker run aoc-2024-clj clj -M -e "(load-file \"src/test.clj\") (clojure.test/run-tests 'test)"
 ```
+
+## Literate Programming with Clerk
+
+You can explore the solution and visualization in a Clerk notebook.
+
+1. Navigate to the day's directory:
+   ```bash
+   cd clj/day-01
+   ```
+
+2. Build the Clerk Docker image:
+   ```bash
+   docker build -f Dockerfile.clerk -t aoc-2024-clj-clerk .
+   ```
+
+3. Run the container:
+   ```bash
+   docker run -p 7777:7777 aoc-2024-clj-clerk
+   ```
+
+4. Open your browser at http://localhost:7777 and select `day01.clj` to see the notebook.
