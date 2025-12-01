@@ -16,6 +16,49 @@
 
 ;; ## 1. Counting Zeros in Rotation
 ;; We need a function that simulates the full path of a rotation and counts zeros.
+;;
+;; ### Mathematical Insight
+;; While we can simulate the rotation step-by-step, we can also think about this mathematically.
+;; We are essentially counting how many multiples of the dial size $N$ fall within the range of movement.
+;;
+;; Let $p$ be the current position, $k$ be the number of steps, and $N=100$ be the dial size.
+;;
+;; #### Clockwise Rotation (Right)
+;; We move from $p$ to $p+k$. We hit 0 whenever our raw position is a multiple of $N$.
+;; We are looking for the number of integers $m$ such that:
+;;
+;; $$ p < m \cdot N \le p + k $$
+;;
+;; This is equivalent to counting multiples of $N$ in the interval $(p, p+k]$.
+;;
+;; #### Counter-Clockwise Rotation (Left)
+;; We move from $p$ to $p-k$. We hit 0 whenever our raw position is a multiple of $N$.
+;; We are looking for the number of integers $m$ such that:
+;;
+;; $$ p - k \le m \cdot N < p $$
+;;
+;; This is equivalent to counting multiples of $N$ in the interval $[p-k, p)$.
+;;
+;; ### Pen & Paper Examples
+;; Let's verify this logic with some concrete numbers ($N=100$).
+;;
+;; **Example 1: Crossing Zero going Right**
+;; * Start at $p=90$. Move Right $k=20$.
+;; * Interval is $(90, 90+20] = (90, 110]$.
+;; * Multiples of 100 in this range: $\{100\}$.
+;; * **Hits: 1**.
+;;
+;; **Example 2: Multiple Rotations**
+;; * Start at $p=50$. Move Right $k=1000$.
+;; * Interval is $(50, 1050]$.
+;; * Multiples of 100: $\{100, 200, 300, \dots, 1000\}$.
+;; * **Hits: 10**.
+;;
+;; **Example 3: Crossing Zero going Left**
+;; * Start at $p=10$. Move Left $k=20$.
+;; * Interval is $[10-20, 10) = [-10, 10)$.
+;; * Multiples of 100: $\{0\}$.
+;; * **Hits: 1**.
 
 (clerk/code (with-out-str (clojure.repl/source sol/count-zeros-in-rotation)))
 
