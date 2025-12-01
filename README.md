@@ -30,5 +30,5 @@ Alternatively, you can use the provided Dockerfile to run the solutions in a con
 2. Run the container with the command:
 
     ```bash
-    docker run -v $(pwd)/clj/day-01/input.txt:/app/input.txt aoc-2024-clj clj -M -e "(load-file \"src/solution.clj\") (solve \"input.txt\")"
+    docker run -v $(pwd)/clj/day-01/input.txt:/app/input.txt aoc-2024-clj clj -M -e "(load-file \"src/solution.clj\") (solution/solve \"input.txt\")"
     ```
