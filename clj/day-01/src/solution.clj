@@ -50,34 +50,24 @@
   "Moves the dial position by the given steps in the given direction.
    Returns [new-position zero-hits] where zero-hits is how many times we passed 0."
   [current-pos direction steps dial-size]
-  (let [step-fn (if (= direction \R) inc dec)]
-    (loop [pos current-pos
-           remaining-steps steps
-           zero-hits 0]
-      (if (zero? remaining-steps)
-        [pos zero-hits]
-        (let [new-pos (mod (step-fn pos) dial-size)
-              new-zero-hits (if (zero? new-pos) (inc zero-hits) zero-hits)]
-          (recur new-pos
-                 (dec remaining-steps)
-                 new-zero-hits))))))
+  (let [step-val (if (= direction \R) 1 -1)
+        ;; Generate path of all positions visited (excluding start)
+        path (map #(mod (+ current-pos (* % step-val)) dial-size)
+                  (range 1 (inc steps)))
+        zero-hits (count (filter zero? path))]
+    [(last path) zero-hits]))
 
 (defn count-dial-zero-is-hit
-    "Counts how many times the dial hits zero."
-    [instructions]
-    (let [dial-size 100  ; 0-99 dial
-          initial-pos 0]
-      (loop [position initial-pos
-             remaining-instructions instructions
-             total-zero-hits 0]
-        (if (empty? remaining-instructions)
-          total-zero-hits
-          (let [instruction (first remaining-instructions)
-                {:keys [direction steps]} (parse-instruction instruction)
-                [new-pos zero-hits] (move-dial position direction steps dial-size)]
-            (recur new-pos
-                   (rest remaining-instructions)
-                   (+ total-zero-hits zero-hits)))))))
+  "Counts how many times the dial hits zero."
+  [instructions]
+  (let [dial-size 100
+        initial-state [0 0]] ;; [current-pos total-hits]
+    (second (reduce (fn [[pos total-hits] instruction]
+                      (let [{:keys [direction steps]} (parse-instruction instruction)
+                            [new-pos new-hits] (move-dial pos direction steps dial-size)]
+                        [new-pos (+ total-hits new-hits)]))
+                    initial-state
+                    instructions))))
 
 ;; Main solution using input.txt file
 (comment
