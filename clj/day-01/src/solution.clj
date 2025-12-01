@@ -59,6 +59,13 @@
                     [initial-pos 0]
                     instructions))))
 
+(defn solve
+  "Reads instructions from a file and counts how many times the dial hits zero."
+  [filename]
+  (->> filename
+       parse-instructions-from-file
+       count-dial-zero-is-hit))
+
 ;; Main solution using input.txt file
 (comment
   ;; Check file setup
