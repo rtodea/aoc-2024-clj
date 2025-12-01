@@ -16,3 +16,19 @@ Advent of Code solutions in Clojure and notes about them.
     (load-file "clj/day-01/src/solution.clj")
     (day-01/solve "clj/day-01/input.txt")
     ```
+
+## Dockerfile approach
+
+Alternatively, you can use the provided Dockerfile to run the solutions in a containerized environment.
+
+1. Build the Docker image with the command:
+
+   ```bash
+   docker build -t aoc-2024-clj .
+   ```
+
+2. Run the container with the command:
+
+    ```bash
+    docker run -v $(pwd)/clj/day-01/input.txt:/app/input.txt aoc-2024-clj clj -M -e "(load-file \"src/solution.clj\") (solve \"input.txt\")"
+    ```
