@@ -30,6 +30,20 @@
 ;; * Moving Right (`R`) adds to the position.
 ;; * Moving Left (`L`) subtracts from the position.
 ;; We use modulo arithmetic to wrap around.
+;;
+;; ### Mathematical Explanation
+;; The dial has a size $N = 100$. Positions are $0, 1, \dots, N-1$.
+;;
+;; When moving $k$ steps from position $p$:
+;;
+;; * **Right (Clockwise):**
+;; $$ p_{new} = (p + k) \pmod N $$
+;;
+;; * **Left (Counter-Clockwise):**
+;; $$ p_{new} = (p - k) \pmod N $$
+;;
+;; In Clojure, `mod` handles negative numbers correctly for this wrapping behavior.
+;; For example, `(mod -5 100)` results in `95`, which corresponds to wrapping around from 0 to 99, 98, etc.
 
 (clerk/code (with-out-str (clojure.repl/source sol/calculate-next-pos)))
 
